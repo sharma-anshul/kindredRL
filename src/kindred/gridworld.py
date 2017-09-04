@@ -14,7 +14,7 @@ class Actions(Enum):
 
 class GridWorld(object):
     """
-    Represents a GridWorld object and provides interface for manipulating state.
+    Represents a grid object.
     
     Represented by a 2D grid, where each position that the agent can be in is one of 
     the following:
@@ -112,6 +112,8 @@ class GridWorld(object):
             grid (str|File): Path to file containing grid representation.
         """
         # use grid if provided else self.grid[1].
+        if not grid and len(self.grids) == 1:
+            return
         grid = grid or self.grids[1]
 
         self.initialize_grid(grid)

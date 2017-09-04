@@ -20,18 +20,19 @@ class Agent(object):
     # initialize Q matrix to None.
     Q = None
     
-    def __init__(self, epsilon, alpha, gamma):
+    def __init__(self, epsilon, alpha, gamma, grids=None):
         """
         Args:
             epsilon (float): Probability for Epsilon policy.
             alpha (float): Step size. Range in [0, 1].
             gamma (float): Discount factor. Range in [0, 1].
-        
+            grids (list[str|File]): List of paths to files representing grids.
+
         Returns:
             No explicit return value.
         """
         # initialize a GridWorld object to be used by the agent.
-        self.grid = GridWorld()
+        self.grid = GridWorld(grids=grids)
 
         # set hyperparameters.
         self.epsilon = epsilon
@@ -62,11 +63,12 @@ class Agent(object):
         Args:
             state (tuple): (x, y) coordinates representing new state of agent.
         """
-        self.grid.state = state
-        self.steps += 1
+        if self.grid.is_valid(state):
+            self.grid.state = state
+            self.steps += 1
 
-        if self.steps == self.STEPS:
-            self.grid.update_grid()
+            if self.steps == self.STEPS:
+                self.grid.update_grid()
 
     def simulate_action(self, Q=None):
         """
@@ -147,6 +149,7 @@ class Agent(object):
         Args:
             state (tuple): (x, y) coordinates representing current position of agent.
             new_state (tuple): (x, y) coordinates representing future position of agent.
+            Q (numpy.Array): 2D array containing Q values for state transitions.
 
         Returns:
             float: Value representing reward in taking an action that results in this

@@ -64,7 +64,7 @@ class SharedState(object):
             self.T.value += 1
             
 
-def learn(num_episodes, epsilon, alpha, gamma):
+def learn(num_episodes, epsilon, alpha, gamma, grids=None):
     """
     Run greedy epsilon based Q Learning.
 
@@ -73,18 +73,25 @@ def learn(num_episodes, epsilon, alpha, gamma):
         epsilon (float): Parameter to control the epsilon greedy policy.
         alpha (float): Learning parameter.
         gamma (float): Discount factor.
+        grids (list[str|File]): List of files containing representation of grids.
 
     Returns:
         (int, numpy.Array): Integer specifying number of steps and 2D array representing
 							the learned Q matrix. 
     """
     # intialize state and setup grid.
-    agent = Agent(epsilon, alpha, gamma)
+    agent = Agent(epsilon, alpha, gamma, grids=grids)
 
     # repeat for each episode:
     for i in xrange(num_episodes):
         # reset agent state to start position.
         agent.state = agent.grid.start
+
+        if agent.steps > 5000:
+            y.append(np.sum(agent.Q))
+            x.append(i)
+
+
         # step through until the agent reaches goal.
         while agent.state != agent.grid.goal:
             current_state = agent.state

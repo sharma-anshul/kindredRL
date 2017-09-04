@@ -87,11 +87,6 @@ def learn(num_episodes, epsilon, alpha, gamma, grids=None):
         # reset agent state to start position.
         agent.state = agent.grid.start
 
-        if agent.steps > 5000:
-            y.append(np.sum(agent.Q))
-            x.append(i)
-
-
         # step through until the agent reaches goal.
         while agent.state != agent.grid.goal:
             current_state = agent.state
